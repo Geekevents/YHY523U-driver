@@ -35,6 +35,16 @@ CMD_MIFARE_DECREMENT = 0x020C
 CMD_MIFARE_INCREMENT = 0x020D
 CMD_MIFARE_UL_SELECT = 0x0212
 
+CMD_NTAG_GET_VERSION = 0x60
+CMD_NTAG_READ = 0x30
+CMD_NTAG_FAST_READ = 0x3A
+CMD_NTAG_WRITE = 0xA2
+CMD_NTAG_COMPABILITY_WRITE = 0xA0
+CMD_NTAG_READ_CNT = 0x39 # 0x02 == NFC counter address
+CMD_NTAG_PWD_AUTH = 0x1B
+CMD_NTAG_READ_SIG = 0x3C
+
+
 # Default keys
 DEFAULT_KEYS = (
     '\x00\x00\x00\x00\x00\x00',
@@ -441,11 +451,11 @@ if __name__ == '__main__':
     device = YHY523U('/dev/ttyUSB0', 115200)
 
     # Lighting of the blue LED
-    #device.set_led('blue')
+    device.set_led('blue')
     # Beeping during 10 ms
-    #device.beep(10)
+    device.beep(10)
     # Lighting of both LEDs
-    #device.set_led('both')
+    device.set_led('both')
 
     # Printing the version of the firmware
     #print device.get_fw_version()
@@ -472,16 +482,17 @@ if __name__ == '__main__':
     #print to_hex(device.read_sector(2, '\xA0\xA1\xA2\xA3\xA4\xA5', (0,1,)))
 
     # Looping reading cards
-    #import time
-    #while 1:
-    #    try:
-    #        card_type, serial = device.select()
-    #        print "Card type:", card_type, "- Serial number:", to_hex(serial)
-    #    except KeyboardInterrupt:
-    #        raise KeyboardInterrupt
-    #    except:
-    #        pass
-    #    time.sleep(0.1)
+    import time
+    while 1:
+        try:
+            card_type, serial = device.select()
+            print "Card type:", card_type, "- Serial number:", to_hex(serial)
+	    print to_hex(device.dump())
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
+        except:
+            pass
+        time.sleep(1)
 
     # Read-write-read-write-read
     # Reading sector: 4, blocks: 2, 3
